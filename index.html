@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holiday Destination Finder</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- styling css -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <header class="hero">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">Find Your Perfect Holiday Destination</h1>
+            <p class="lead mb-4">Discover amazing places tailored to your preferences</p>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="input-group search-box">
+                        <input type="text" id="search-input" class="form-control form-control-lg search-input" placeholder="Search for a city or destination...">
+                        <button class="btn btn-lg btn-primary search-btn" id="search-btn" type="button">
+                            <i class="fas fa-search me-2"></i>Search
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex flex-wrap justify-content-center mt-3 filter-options">
+                <div class="filter-btn active" data-type="all">All</div>
+                <div class="filter-btn" data-type="attraction">Attractions</div>
+                <div class="filter-btn" data-type="restaurant">Restaurants</div>
+                <div class="filter-btn" data-type="hotel">Hotels</div>
+            </div>
+        </div>
+    </header>
+    
+    <main class="py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mb-4">
+                    <div class="map-container">
+                        <div id="map"></div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <h2 class="mb-4">Popular Destinations</h2>
+                    
+                    <div class="row">
+                        <div class="col-md-6 col-lg-12 mb-3">
+                            <div class="destination-card" data-city="Paris, France">
+                                <img src="https://images.unsplash.com/photo-1431274172761-fca41d930114?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Paris" class="img-fluid">
+                                <h3>Paris, France</h3>
+                                <p>The City of Light known for its art, fashion, gastronomy and culture. Iconic landmarks include the Eiffel Tower and Louvre Museum.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 col-lg-12 mb-3">
+                            <div class="destination-card" data-city="Tokyo, Japan">
+                                <img src="https://images.unsplash.com/photo-1492571350019-22de08371fd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Tokyo" class="img-fluid">
+                                <h3>Tokyo, Japan</h3>
+                                <p>A bustling metropolis blending ultramodern and traditional, from neon-lit skyscrapers to historic temples.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 col-lg-12 mb-3">
+                            <div class="destination-card" data-city="New York, USA">
+                                <img src="https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="New York" class="img-fluid">
+                                <h3>New York, USA</h3>
+                                <p>The city that never sleeps, featuring iconic sites like Times Square, Central Park, and the Statue of Liberty.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="package-banner">
+                        <h3>Special Travel Packages</h3>
+                        <p class="mb-3">Book your dream vacation with our exclusive partners and save up to 30%!</p>
+                        <button class="btn btn-dark" id="package-btn">View Packages</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <div class="container">
+            <p class="mb-0">&copy; 2023 Holiday Destination Finder. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Load Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initMap" async defer></script>
+    
+    <script>
+        // Replace with your actual API key
+        const API_KEY = 'YOUR_API_KEY';
+        
+        let map;
+        let service;
+        let infowindow;
+        let markers = [];
+        let currentPlaceType = 'all';
+        
+        function initMap() {
+            // Default location (Paris)
+            const paris = { lat: 48.8566, lng: 2.3522 };
+            
+            infowindow = new google.maps.InfoWindow();
+            
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: paris,
+                zoom: 12,
+            });
+            
+            service = new google.maps.places.PlacesService(map);
+            
+            // Search for places in Paris by default
+            searchPlaces(paris, currentPlaceType);
+            
+            // Set up event listeners
+            setupEventListeners();
+        }
+        
+        function setupEventListeners() {
+            // Search button click
+            document.getElementById('search-btn').addEventListener('click', performSearch);
+            
+            // Enter key in search input
+            document.getElementById('search-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            // Destination card clicks
+            const destinationCards = document.querySelectorAll('.destination-card');
+            destinationCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const city = this.getAttribute('data-city');
+                    document.getElementById('search-input').value = city;
+                    performSearch();
+                });
+            });
+            
+            // Filter buttons
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    currentPlaceType = this.getAttribute('data-type');
+                    
+                    // Get current center of the map
+                    const center = map.getCenter();
+                    searchPlaces({ lat: center.lat(), lng: center.lng() }, currentPlaceType);
+                });
+            });
+            
+            // Package button
+            document.getElementById('package-btn').addEventListener('click', function() {
+                alert('Redirecting to travel packages... In a real implementation, this would link to a booking page.');
+            });
+        }
+        
+        function performSearch() {
+            const input = document.getElementById('search-input').value;
+            
+            if (!input) {
+                alert('Please enter a location to search');
+                return;
+            }
+            
+            // Use Google Places API to find the location
+            const request = {
+                query: input,
+                fields: ['name', 'geometry'],
+            };
+            
+            service = new google.maps.places.PlacesService(map);
+            
+            service.findPlaceFromQuery(request, (results, status) => {
+                if (status === google.maps.places.PlacesServiceStatus.OK && results[0]) {
+                    const place = results[0];
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(14);
+                    
+                    // Search for places in the new location
+                    searchPlaces(place.geometry.location, currentPlaceType);
+                } else {
+                    alert('Location not found. Please try a different search term.');
+                }
+            });
+        }
+        
+        function searchPlaces(location, type) {
+            // Clear existing markers
+            clearMarkers();
+            
+            let request = {
+                location: location,
+                radius: '2000',
+            };
+            
+            // Modify request based on selected type
+            if (type === 'attraction') {
+                request.type = ['tourist_attraction', 'amusement_park', 'museum'];
+            } else if (type === 'restaurant') {
+                request.type = ['restaurant', 'cafe', 'bar'];
+            } else if (type === 'hotel') {
+                request.type = ['lodging', 'hotel'];
+            } else {
+                // Search for all types
+                request.type = ['tourist_attraction', 'restaurant', 'lodging'];
+            }
+            
+            service.nearbySearch(request, (results, status) => {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    createMarkers(results);
+                    
+                    // Also update the sidebar with attraction list
+                    updateAttractionsList(results);
+                }
+            });
+        }
+        
+        function createMarkers(places) {
+            const bounds = new google.maps.LatLngBounds();
+            
+            for (let i = 0; i < places.length; i++) {
+                const place = places[i];
+                
+                // Skip if no geometry info
+                if (!place.geometry || !place.geometry.location) continue;
+                
+                // Create a marker for each place
+                const marker = new google.maps.Marker({
+                    map: map,
+                    position: place.geometry.location,
+                    title: place.name,
+                });
+                
+                // Add marker to array for later management
+                markers.push(marker);
+                
+                // Extend the bounds of the map for each marker
+                bounds.extend(place.geometry.location);
+                
+                // Add click listener for each marker
+                google.maps.event.addListener(marker, 'click', () => {
+                    const content = `
+                        <div class="info-window">
+                            <h3>${place.name}</h3>
+                            <p>Rating: ${place.rating || 'Not rated'}</p>
+                            ${place.vicinity ? `<p>Address: ${place.vicinity}</p>` : ''}
+                        </div>
+                    `;
+                    infowindow.setContent(content);
+                    infowindow.open(map, marker);
+                });
+            }
+            
+            // Fit the map to the bounds if we have markers
+            if (markers.length > 0) {
+                map.fitBounds(bounds);
+            }
+        }
+        
+        function clearMarkers() {
+            for (let i = 0; i < markers.length; i++) {
+                markers[i].setMap(null);
+            }
+            markers = [];
+        }
+        
+        function updateAttractionsList(places) {
+            let attractionsContainer = document.querySelector('.attractions-list');
+            
+            // Create the container if it doesn't exist
+            if (!attractionsContainer) {
+                const sidebar = document.querySelector('.col-lg-4');
+                attractionsContainer = document.createElement('div');
+                attractionsContainer.className = 'attractions-list mt-4';
+                attractionsContainer.innerHTML = '<h3>Nearby Places</h3>';
+                sidebar.insertBefore(attractionsContainer, document.querySelector('.package-banner'));
+            } else {
+                // Clear existing content (except the heading)
+                while (attractionsContainer.children.length > 1) {
+                    attractionsContainer.removeChild(attractionsContainer.lastChild);
+                }
+            }
+            
+            // Add each place to the list
+            places.slice(0, 10).forEach(place => {
+                const attractionItem = document.createElement('div');
+                attractionItem.className = 'attraction-item';
+                
+                // Determine icon based on place type
+                let iconClass = 'fa-map-marker-alt'; // default
+                if (place.types.includes('restaurant') || place.types.includes('cafe') || place.types.includes('bar')) {
+                    iconClass = 'fa-utensils';
+                } else if (place.types.includes('lodging') || place.types.includes('hotel')) {
+                    iconClass = 'fa-hotel';
+                } else if (place.types.includes('museum')) {
+                    iconClass = 'fa-landmark';
+                }
+                
+                attractionItem.innerHTML = `
+                    <div class="attraction-icon">
+                        <i class="fas ${iconClass}"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-1">${place.name}</h5>
+                        <p class="mb-1 small text-muted">${place.vicinity || ''}</p>
+                        ${place.rating ? `<p class="mb-0 small"><i class="fas fa-star" style="color: #FFD700;"></i> ${place.rating}</p>` : ''}
+                    </div>
+                `;
+                
+                attractionsContainer.appendChild(attractionItem);
+            });
+        }
+        
+        // Initialize the map when the API is loaded
+        window.initMap = initMap;
+    </script>
+</body>
+</html>
