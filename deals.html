@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Find exclusive holiday deals with HolidayFinder">
+    <meta name="theme-color" content="#4285F4">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"></noscript>
+    
+    <title>Exclusive Holiday Deals | HolidayFinder</title>
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- CSS with fallbacks -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Inline critical CSS -->
+    <style>
+        :root {
+            --primary: #4285F4;
+            --secondary: #34A853;
+            --accent: #EA4335;
+            --light: #f5f5f5;
+            --dark: #333;
+            --gray: #757575;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--dark);
+            background-color: #f9f9f9;
+        }
+        
+        .deals-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                        url('https://images.unsplash.com/photo-1503917988258-f87a78e3c995?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
+            background-size: cover;
+            padding: 120px 0 80px;
+            color: white;
+            text-align: center;
+        }
+        
+        .badge-ribbon {
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            padding: 5px 30px;
+            background-color: var(--accent);
+            color: white;
+            font-weight: bold;
+            transform: rotate(45deg);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            width: 120px;
+            text-align: center;
+        }
+        
+        .deal-card, .deal-card-horizontal {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            overflow: hidden;
+        }
+        
+        .deal-card:hover, .deal-card-horizontal:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+        }
+        
+        .deal-details {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .detail-item i {
+            color: var(--primary);
+        }
+        
+        .loading-spinner {
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+    
+    <!-- Non-critical CSS loaded asynchronously -->
+    <link rel="stylesheet" href="assets/css/style.css" media="print" onload="this.media='all'">
+</head>
+
+<body class="deals-page">
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="visually-hidden-focusable">Skip to main content</a>
+    
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm" aria-label="Main navigation">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary" href="index.html">
+                <i class="fas fa-map-marked-alt me-2" aria-hidden="true"></i>HolidayFinder
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="destinations.html">Destinations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="deals.html" aria-current="page">Deals</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="deals-hero">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">Exclusive Holiday Deals</h1>
+            <p class="lead mb-4">Discover amazing offers tailored just for you</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="py-5">
+        <div class="container">
+            <!-- Deal Filters -->
+            <section aria-labelledby="deal-filters-heading" class="mb-5">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h2 id="deal-filters-heading" class="card-title mb-4"><i class="fas fa-filter me-2" aria-hidden="true"></i>Filter Deals</h2>
+                                <form id="deal-filters">
+                                    <div class="row">
+                                        <div class="col-md-3 mb-3">
+                                            <label for="deal-type" class="form-label">Deal Type</label>
+                                            <select class="form-select" id="deal-type" aria-label="Filter by deal type">
+                                                <option value="all">All Deals</option>
+                                                <option value="hotel">Hotels</option>
+                                                <option value="flight">Flights</option>
+                                                <option value="package">Packages</option>
+                                                <option value="last-minute">Last Minute</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label for="destination-filter" class="form-label">Destination</label>
+                                            <select class="form-select" id="destination-filter" aria-label="Filter by destination">
+                                                <option value="all">Any Destination</option>
+                                                <option value="europe">Europe</option>
+                                                <option value="asia">Asia</option>
+                                                <option value="america">America</option>
+                                                <option value="africa">Africa</option>
+                                                <option value="australia">Australia</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label for="price-range" class="form-label">Price Range</label>
+                                            <select class="form-select" id="price-range" aria-label="Filter by price range">
+                                                <option value="all">Any Price</option>
+                                                <option value="0-500">Under $500</option>
+                                                <option value="500-1000">$500 - $1000</option>
+                                                <option value="1000-2000">$1000 - $2000</option>
+                                                <option value="2000+">Over $2000</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label for="travel-month" class="form-label">Travel Month</label>
+                                            <select class="form-select" id="travel-month" aria-label="Filter by travel month">
+                                                <option value="all">Any Month</option>
+                                                <option value="1">January</option>
+                                                <option value="2">February</option>
+                                                <option value="3">March</option>
+                                                <option value="4">April</option>
+                                                <option value="5">May</option>
+                                                <option value="6">June</option>
+                                                <option value="7">July</option>
+                                                <option value="8">August</option>
+                                                <option value="9">September</option>
+                                                <option value="10">October</option>
+                                                <option value="11">November</option>
+                                                <option value="12">December</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-end">
+                                        <button type="reset" class="btn btn-outline-secondary me-2" aria-label="Reset filters">
+                                            <i class="fas fa-undo me-1" aria-hidden="true"></i> Reset
+                                        </button>
+                                        <button type="submit" class="btn btn-primary" aria-label="Apply filters">
+                                            <i class="fas fa-search me-1" aria-hidden="true"></i> Apply Filters
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Deals -->
+            <section aria-labelledby="featured-deals-heading" class="mb-5">
+                <h2 id="featured-deals-heading" class="mb-4"><i class="fas fa-star me-2" aria-hidden="true"></i>Featured Deals</h2>
+                <div class="row" id="featured-deals">
+                    <div class="col-12 loading-spinner">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading featured deals...</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- All Deals -->
+            <section aria-labelledby="all-deals-heading">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 id="all-deals-heading"><i class="fas fa-list me-2" aria-hidden="true"></i>All Deals</h2>
+                    <div class="sort-options">
+                        <label for="sort-deals" class="visually-hidden">Sort deals by</label>
+                        <select class="form-select form-select-sm" id="sort-deals" aria-label="Sort deals">
+                            <option value="popular">Sort by: Popular</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="discount">Highest Discount</option>
+                            <option value="date">Newest First</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row" id="all-deals">
+                    <div class="col-12 loading-spinner">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading all deals...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <nav aria-label="Deals pagination" class="mt-4">
+                    <ul class="pagination justify-content-center" id="deals-pagination">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#" aria-label="Page 1">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#" aria-label="Page 2">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#" aria-label="Page 3">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next page">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </section>
+
+            <!-- Newsletter Section -->
+            <section aria-labelledby="newsletter-heading" class="newsletter-section mt-5">
+                <div class="card bg-primary text-white">
+                    <div class="card-body p-5">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6 mb-4 mb-lg-0">
+                                <h3 id="newsletter-heading" class="mb-3">Get the Best Deals Direct to Your Inbox</h3>
+                                <p class="mb-0">Subscribe to our newsletter and be the first to know about exclusive offers and last-minute deals.</p>
+                            </div>
+                            <div class="col-lg-6">
+                                <form class="newsletter-form" id="newsletter-form">
+                                    <div class="input-group">
+                                        <label for="newsletter-email" class="visually-hidden">Email address</label>
+                                        <input type="email" class="form-control" id="newsletter-email" 
+                                               placeholder="Your email address" required
+                                               aria-describedby="newsletter-email-help">
+                                        <button class="btn btn-dark" type="submit" aria-label="Subscribe to newsletter">Subscribe</button>
+                                    </div>
+                                    <div id="newsletter-email-help" class="form-text text-white mt-1">We'll never share your email</div>
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" id="newsletter-consent" checked required>
+                                        <label class="form-check-label small" for="newsletter-consent">
+                                            I agree to receive promotional emails
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer py-4 bg-dark text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h2 class="h5">HolidayFinder</h2>
+                    <p>Your trusted companion for discovering the world's most amazing destinations.</p>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h3 class="h5">Links</h3>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html" class="text-white">Home</a></li>
+                        <li><a href="destinations.html" class="text-white">Destinations</a></li>
+                        <li><a href="deals.html" class="text-white">Deals</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <h3 class="h5">Contact</h3>
+                    <address class="list-unstyled">
+                        <li><i class="fas fa-envelope me-2" aria-hidden="true"></i> hello@holidayfinder.com</li>
+                        <li><i class="fas fa-phone me-2" aria-hidden="true"></i> +1 (555) 123-4567</li>
+                    </address>
+                </div>
+                <div class="col-md-3">
+                    <h3 class="h5">Follow Us</h3>
+                    <div class="social-links">
+                        <a href="#" class="text-white me-3" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
+                        <a href="#" class="text-white me-3" aria-label="Twitter"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+                        <a href="#" class="text-white me-3" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                        <a href="#" class="text-white" aria-label="LinkedIn"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4 bg-light">
+            <div class="text-center">
+                <p class="mb-0">&copy; <span id="current-year">2023</span> HolidayFinder. All rights reserved.</p>
+                <p class="small text-muted mt-2">Last updated: <span id="last-updated">Loading...</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Load scripts with defer -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+    
+    <!-- Deals JS module -->
+    <script src="assets/js/deals.js" type="module" defer></script>
+    
+    <!-- Inline script for current year -->
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        document.getElementById('last-updated').textContent = new Date().toLocaleDateString('en-US', {
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric'
+        });
+    </script>
+</body>
+</html>

@@ -3,329 +3,262 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Holiday Destination Finder</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Google Fonts -->
+    <meta name="description" content="Find your perfect holiday destination with HolidayFinder">
+    <meta name="theme-color" content="#4285F4">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"></noscript>
+    
+    <title>Holiday Destination Finder | HolidayFinder</title>
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- CSS with fallbacks -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- styling css -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.css">
+    
+    <!-- Non-critical CSS loaded asynchronously -->
+    <link rel="stylesheet" href="assets/css/style.css" media="print" onload="this.media='all'">
 </head>
-<body>
-    <header class="hero">
+
+<body class="index-page">
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="visually-hidden-focusable">Skip to main content</a>
+    
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm" aria-label="Main navigation">
         <div class="container">
+            <a class="navbar-brand fw-bold text-primary" href="index.html">
+                <i class="fas fa-map-marked-alt me-2" aria-hidden="true"></i>HolidayFinder
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html" aria-current="page">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="destinations.html">Destinations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="deals.html">Deals</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div id="contain" class="container">
             <h1 class="display-4 fw-bold mb-3">Find Your Perfect Holiday Destination</h1>
             <p class="lead mb-4">Discover amazing places tailored to your preferences</p>
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="input-group search-box">
-                        <input type="text" id="search-input" class="form-control form-control-lg search-input" placeholder="Search for a city or destination...">
-                        <button class="btn btn-lg btn-primary search-btn" id="search-btn" type="button">
-                            <i class="fas fa-search me-2"></i>Search
+                        <label for="search-input" class="visually-hidden">Search for destinations</label>
+                        <input type="text" id="search-input" class="form-control form-control-lg search-input"
+                            placeholder="Search for a city or country..." aria-label="Search destinations">
+                        <button class="btn btn-lg btn-primary search-btn" id="search-btn" type="button" aria-label="Search">
+                            <i class="fas fa-search me-2" aria-hidden="true"></i>Search
                         </button>
                     </div>
                 </div>
             </div>
-            <div class="d-flex flex-wrap justify-content-center mt-3 filter-options">
-                <div class="filter-btn active" data-type="all">All</div>
-                <div class="filter-btn" data-type="attraction">Attractions</div>
-                <div class="filter-btn" data-type="restaurant">Restaurants</div>
-                <div class="filter-btn" data-type="hotel">Hotels</div>
+            <div class="d-flex flex-wrap justify-content-center mt-3 filter-options" role="tablist">
+                <button class="filter-btn active" data-type="all" role="tab" aria-selected="true">All</button>
+                <button class="filter-btn" data-type="attraction" role="tab" aria-selected="false">Attractions</button>
+                <button class="filter-btn" data-type="restaurant" role="tab" aria-selected="false">Restaurants</button>
+                <button class="filter-btn" data-type="hotel" role="tab" aria-selected="false">Hotels</button>
             </div>
         </div>
     </header>
-    
-    <main class="py-4">
+
+    <!-- Main Content -->
+    <main id="main-content" class="py-4">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 mb-4">
-                    <div class="map-container">
-                        <div id="map"></div>
-                    </div>
+                    <section aria-labelledby="map-heading">
+                        <h2 id="map-heading" class="visually-hidden">Interactive Map</h2>
+                        <div class="map-container">
+                            <div id="map" aria-label="Interactive map of destinations"></div>
+                            <div class="map-controls">
+                                <button id="use-current-location" class="btn btn-sm btn-outline-primary" aria-label="Use my current location">
+                                    <i class="fas fa-location-arrow" aria-hidden="true"></i> Use My Location
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Enhanced Booking Section -->
+                    <section aria-labelledby="booking-heading" class="mt-5">
+                        <div class="card shadow">
+                            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                                <h3 id="booking-heading" class="mb-0"><i class="fas fa-calendar-alt me-2" aria-hidden="true"></i>Book Your Trip</h3>
+                            </div>
+                            <div class="card-body">
+                                <form id="booking-form" novalidate>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="destination" class="form-label">Destination</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="destination"
+                                                    placeholder="Where do you want to go?" required
+                                                    aria-describedby="destination-help">
+                                                <button class="btn btn-outline-secondary" type="button"
+                                                    id="find-on-map" aria-label="Find location on map">
+                                                    <i class="fas fa-map-marked-alt" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                            <div id="destination-help" class="form-text">Enter a city or country</div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="travel-date-range" class="form-label">Travel Date Range</label>
+                                            <div class="d-flex align-items-center">
+                                                <input type="date" class="form-control me-2" id="travel-date-start"
+                                                    readonly style="width: 120px;" aria-label="Start date">
+                                                <div id="date-range-slider" class="flex-grow-1 mx-2" aria-hidden="true"></div>
+                                                <input type="date" class="form-control ms-2" id="travel-date-end"
+                                                    readonly style="width: 120px;" aria-label="End date">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="trip-type" class="form-label">Trip Type</label>
+                                            <select class="form-select" id="trip-type">
+                                                <option value="vacation">Vacation</option>
+                                                <option value="business">Business</option>
+                                                <option value="honeymoon">Honeymoon</option>
+                                                <option value="family">Family</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="adults" class="form-label">Adults</label>
+                                            <select class="form-select" id="adults">
+                                                <option value="1">1</option>
+                                                <option value="2" selected>2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="nights" class="form-label">Nights</label>
+                                            <select class="form-select" id="nights">
+                                                <option value="3">3-5</option>
+                                                <option value="7" selected>7</option>
+                                                <option value="10">10</option>
+                                                <option value="14">14</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                        <button type="button" class="btn btn-outline-secondary me-md-2"
+                                            id="clear-booking" aria-label="Clear form">
+                                            <i class="fas fa-eraser me-1" aria-hidden="true"></i> Clear
+                                        </button>
+                                        <button type="submit" class="btn btn-primary" id="submit-booking">
+                                            <i class="fas fa-paper-plane me-1" aria-hidden="true"></i> Submit Booking
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
                 </div>
+
+                <!-- Popular Destinations Sidebar -->
                 <div class="col-lg-4">
-                    <h2 class="mb-4">Popular Destinations</h2>
-                    
-                    <div class="row">
-                        <div class="col-md-6 col-lg-12 mb-3">
-                            <div class="destination-card" data-city="Paris, France">
-                                <img src="https://images.unsplash.com/photo-1431274172761-fca41d930114?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Paris" class="img-fluid">
-                                <h3>Paris, France</h3>
-                                <p>The City of Light known for its art, fashion, gastronomy and culture. Iconic landmarks include the Eiffel Tower and Louvre Museum.</p>
+                    <div class="sticky-top" style="top: 20px;">
+                        <section aria-labelledby="popular-destinations-heading">
+                            <h2 id="popular-destinations-heading" class="mb-4">Popular Destinations</h2>
+                            <div class="row" id="popular-destinations">
+                                <!-- Destination cards populated by JavaScript -->
+                                <div class="col-12 text-center py-4">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading destinations...</span>
+                                    </div>
+                                    <p class="mt-2">Loading popular destinations...</p>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="col-md-6 col-lg-12 mb-3">
-                            <div class="destination-card" data-city="Tokyo, Japan">
-                                <img src="https://images.unsplash.com/photo-1492571350019-22de08371fd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Tokyo" class="img-fluid">
-                                <h3>Tokyo, Japan</h3>
-                                <p>A bustling metropolis blending ultramodern and traditional, from neon-lit skyscrapers to historic temples.</p>
+                        </section>
+
+                        <section aria-labelledby="special-offers-heading" class="mt-4">
+                            <div class="package-banner p-4 bg-light rounded">
+                                <h3 id="special-offers-heading"><i class="fas fa-gift me-2" aria-hidden="true"></i>Special Offers</h3>
+                                <p>Book now and get 15% off on selected hotels!</p>
+                                <div id="dynamic-offer" class="text-center mb-3">
+                                    <!-- Dynamic offer inserted here -->
+                                </div>
+                                <button class="btn btn-dark w-100" id="view-offers" aria-label="View all offers">
+                                    <i class="fas fa-tags me-1" aria-hidden="true"></i> View All Offers
+                                </button>
                             </div>
-                        </div>
-                        
-                        <div class="col-md-6 col-lg-12 mb-3">
-                            <div class="destination-card" data-city="New York, USA">
-                                <img src="https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="New York" class="img-fluid">
-                                <h3>New York, USA</h3>
-                                <p>The city that never sleeps, featuring iconic sites like Times Square, Central Park, and the Statue of Liberty.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="package-banner">
-                        <h3>Special Travel Packages</h3>
-                        <p class="mb-3">Book your dream vacation with our exclusive partners and save up to 30%!</p>
-                        <button class="btn btn-dark" id="package-btn">View Packages</button>
+                        </section>
                     </div>
                 </div>
             </div>
         </div>
     </main>
-    
-    <footer class="footer">
+
+    <!-- FOOTER -->
+    <footer class="footer py-4 bg-dark text-white">
         <div class="container">
-            <p class="mb-0">&copy; 2023 Holiday Destination Finder. All rights reserved.</p>
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h2 class="h5">HolidayFinder</h2>
+                    <p>Your trusted companion for discovering the world's most amazing destinations.</p>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h3 class="h5">Links</h3>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html" class="text-white">Home</a></li>
+                        <li><a href="destinations.html" class="text-white">Destinations</a></li>
+                        <li><a href="deals.html" class="text-white">Deals</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <h3 class="h5">Contact</h3>
+                    <address class="list-unstyled">
+                        <li><i class="fas fa-envelope me-2" aria-hidden="true"></i> hello@holidayfinder.com</li>
+                        <li><i class="fas fa-phone me-2" aria-hidden="true"></i> +1 (555) 123-4567</li>
+                    </address>
+                </div>
+                <div class="col-md-3">
+                    <h3 class="h5">Follow Us</h3>
+                    <div class="social-links">
+                        <a href="#" class="text-white me-3" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
+                        <a href="#" class="text-white me-3" aria-label="Twitter"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+                        <a href="#" class="text-white me-3" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                        <a href="#" class="text-white" aria-label="LinkedIn"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4 bg-light">
+            <div class="text-center">
+                <p class="mb-0">&copy; <span id="current-year">2023</span> HolidayFinder. All rights reserved.</p>
+                <p class="small text-muted mt-2">Last updated: <span id="last-updated">Loading...</span></p>
+            </div>
         </div>
     </footer>
 
-    <!-- Bootstrap JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Load scripts with defer -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.js" defer></script>
     
-    <!-- Load Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initMap" async defer></script>
+    <!-- Main JS with module pattern -->
+    <script src="assets/js/index.js" type="module" defer></script>
     
+    <!-- Inline script for current year -->
     <script>
-        // Replace with your actual API key
-        const API_KEY = 'YOUR_API_KEY';
-        
-        let map;
-        let service;
-        let infowindow;
-        let markers = [];
-        let currentPlaceType = 'all';
-        
-        function initMap() {
-            // Default location (Paris)
-            const paris = { lat: 48.8566, lng: 2.3522 };
-            
-            infowindow = new google.maps.InfoWindow();
-            
-            map = new google.maps.Map(document.getElementById("map"), {
-                center: paris,
-                zoom: 12,
-            });
-            
-            service = new google.maps.places.PlacesService(map);
-            
-            // Search for places in Paris by default
-            searchPlaces(paris, currentPlaceType);
-            
-            // Set up event listeners
-            setupEventListeners();
-        }
-        
-        function setupEventListeners() {
-            // Search button click
-            document.getElementById('search-btn').addEventListener('click', performSearch);
-            
-            // Enter key in search input
-            document.getElementById('search-input').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    performSearch();
-                }
-            });
-            
-            // Destination card clicks
-            const destinationCards = document.querySelectorAll('.destination-card');
-            destinationCards.forEach(card => {
-                card.addEventListener('click', function() {
-                    const city = this.getAttribute('data-city');
-                    document.getElementById('search-input').value = city;
-                    performSearch();
-                });
-            });
-            
-            // Filter buttons
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    currentPlaceType = this.getAttribute('data-type');
-                    
-                    // Get current center of the map
-                    const center = map.getCenter();
-                    searchPlaces({ lat: center.lat(), lng: center.lng() }, currentPlaceType);
-                });
-            });
-            
-            // Package button
-            document.getElementById('package-btn').addEventListener('click', function() {
-                alert('Redirecting to travel packages... In a real implementation, this would link to a booking page.');
-            });
-        }
-        
-        function performSearch() {
-            const input = document.getElementById('search-input').value;
-            
-            if (!input) {
-                alert('Please enter a location to search');
-                return;
-            }
-            
-            // Use Google Places API to find the location
-            const request = {
-                query: input,
-                fields: ['name', 'geometry'],
-            };
-            
-            service = new google.maps.places.PlacesService(map);
-            
-            service.findPlaceFromQuery(request, (results, status) => {
-                if (status === google.maps.places.PlacesServiceStatus.OK && results[0]) {
-                    const place = results[0];
-                    map.setCenter(place.geometry.location);
-                    map.setZoom(14);
-                    
-                    // Search for places in the new location
-                    searchPlaces(place.geometry.location, currentPlaceType);
-                } else {
-                    alert('Location not found. Please try a different search term.');
-                }
-            });
-        }
-        
-        function searchPlaces(location, type) {
-            // Clear existing markers
-            clearMarkers();
-            
-            let request = {
-                location: location,
-                radius: '2000',
-            };
-            
-            // Modify request based on selected type
-            if (type === 'attraction') {
-                request.type = ['tourist_attraction', 'amusement_park', 'museum'];
-            } else if (type === 'restaurant') {
-                request.type = ['restaurant', 'cafe', 'bar'];
-            } else if (type === 'hotel') {
-                request.type = ['lodging', 'hotel'];
-            } else {
-                // Search for all types
-                request.type = ['tourist_attraction', 'restaurant', 'lodging'];
-            }
-            
-            service.nearbySearch(request, (results, status) => {
-                if (status === google.maps.places.PlacesServiceStatus.OK) {
-                    createMarkers(results);
-                    
-                    // Also update the sidebar with attraction list
-                    updateAttractionsList(results);
-                }
-            });
-        }
-        
-        function createMarkers(places) {
-            const bounds = new google.maps.LatLngBounds();
-            
-            for (let i = 0; i < places.length; i++) {
-                const place = places[i];
-                
-                // Skip if no geometry info
-                if (!place.geometry || !place.geometry.location) continue;
-                
-                // Create a marker for each place
-                const marker = new google.maps.Marker({
-                    map: map,
-                    position: place.geometry.location,
-                    title: place.name,
-                });
-                
-                // Add marker to array for later management
-                markers.push(marker);
-                
-                // Extend the bounds of the map for each marker
-                bounds.extend(place.geometry.location);
-                
-                // Add click listener for each marker
-                google.maps.event.addListener(marker, 'click', () => {
-                    const content = `
-                        <div class="info-window">
-                            <h3>${place.name}</h3>
-                            <p>Rating: ${place.rating || 'Not rated'}</p>
-                            ${place.vicinity ? `<p>Address: ${place.vicinity}</p>` : ''}
-                        </div>
-                    `;
-                    infowindow.setContent(content);
-                    infowindow.open(map, marker);
-                });
-            }
-            
-            // Fit the map to the bounds if we have markers
-            if (markers.length > 0) {
-                map.fitBounds(bounds);
-            }
-        }
-        
-        function clearMarkers() {
-            for (let i = 0; i < markers.length; i++) {
-                markers[i].setMap(null);
-            }
-            markers = [];
-        }
-        
-        function updateAttractionsList(places) {
-            let attractionsContainer = document.querySelector('.attractions-list');
-            
-            // Create the container if it doesn't exist
-            if (!attractionsContainer) {
-                const sidebar = document.querySelector('.col-lg-4');
-                attractionsContainer = document.createElement('div');
-                attractionsContainer.className = 'attractions-list mt-4';
-                attractionsContainer.innerHTML = '<h3>Nearby Places</h3>';
-                sidebar.insertBefore(attractionsContainer, document.querySelector('.package-banner'));
-            } else {
-                // Clear existing content (except the heading)
-                while (attractionsContainer.children.length > 1) {
-                    attractionsContainer.removeChild(attractionsContainer.lastChild);
-                }
-            }
-            
-            // Add each place to the list
-            places.slice(0, 10).forEach(place => {
-                const attractionItem = document.createElement('div');
-                attractionItem.className = 'attraction-item';
-                
-                // Determine icon based on place type
-                let iconClass = 'fa-map-marker-alt'; // default
-                if (place.types.includes('restaurant') || place.types.includes('cafe') || place.types.includes('bar')) {
-                    iconClass = 'fa-utensils';
-                } else if (place.types.includes('lodging') || place.types.includes('hotel')) {
-                    iconClass = 'fa-hotel';
-                } else if (place.types.includes('museum')) {
-                    iconClass = 'fa-landmark';
-                }
-                
-                attractionItem.innerHTML = `
-                    <div class="attraction-icon">
-                        <i class="fas ${iconClass}"></i>
-                    </div>
-                    <div>
-                        <h5 class="mb-1">${place.name}</h5>
-                        <p class="mb-1 small text-muted">${place.vicinity || ''}</p>
-                        ${place.rating ? `<p class="mb-0 small"><i class="fas fa-star" style="color: #FFD700;"></i> ${place.rating}</p>` : ''}
-                    </div>
-                `;
-                
-                attractionsContainer.appendChild(attractionItem);
-            });
-        }
-        
-        // Initialize the map when the API is loaded
-        window.initMap = initMap;
+        document.getElementById('current-year').textContent = new Date().getFullYear();
     </script>
 </body>
 </html>

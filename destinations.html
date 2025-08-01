@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover popular holiday destinations with HolidayFinder">
+    <meta name="theme-color" content="#4285F4">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"></noscript>
+    
+    <title>Popular Destinations | HolidayFinder</title>
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- CSS with fallbacks -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Inline critical CSS -->
+    <style>
+        .destinations-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                        url('https://images.unsplash.com/photo-1503917988258-f87a78e3c995?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
+            background-size: cover;
+            padding: 120px 0 80px;
+            color: white;
+            text-align: center;
+        }
+        
+        /* Ranking badge styles */
+        .ranking-badge {
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 12px;
+        }
+        
+        .gold { background-color: #FFD700; color: #000; }
+        .silver { background-color: #C0C0C0; color: #000; }
+        .bronze { background-color: #CD7F32; color: #000; }
+        
+        /* Loading spinner */
+        .spinner-container {
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+    
+    <!-- Non-critical CSS loaded asynchronously -->
+    <link rel="stylesheet" href="assets/css/style.css" media="print" onload="this.media='all'">
+</head>
+
+<body class="destinations-page">
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="visually-hidden-focusable">Skip to main content</a>
+    
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm" aria-label="Main navigation">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary" href="index.html">
+                <i class="fas fa-map-marked-alt me-2" aria-hidden="true"></i>HolidayFinder
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="destinations.html" aria-current="page">Destinations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="deals.html">Deals</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="destinations-hero py-5 mt-5">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1 class="display-4 fw-bold mb-3">Popular Destinations</h1>
+                    <p class="lead">Discover the world's most sought-after travel spots based on real-time traveler data</p>
+                    <div class="d-flex justify-content-center mt-4 flex-wrap" role="tablist">
+                        <button type="button" class="btn btn-outline-primary active me-2 mb-2" id="btn-global" role="tab" aria-selected="true">Global</button>
+                        <button type="button" class="btn btn-outline-primary me-2 mb-2" id="btn-europe" role="tab" aria-selected="false">Europe</button>
+                        <button type="button" class="btn btn-outline-primary me-2 mb-2" id="btn-asia" role="tab" aria-selected="false">Asia</button>
+                        <button type="button" class="btn btn-outline-primary mb-2" id="btn-americas" role="tab" aria-selected="false">Americas</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="py-5">
+        <div class="container">
+            <div class="alert alert-info d-flex align-items-center mb-4">
+                <i class="fas fa-sync-alt me-3 fa-lg" aria-hidden="true"></i>
+                <div>These rankings are updated hourly based on current booking trends.</div>
+            </div>
+    
+            <!-- Top Destinations -->
+            <section aria-labelledby="top-destinations-heading" class="mb-5">
+                <h2 id="top-destinations-heading" class="fw-bold mb-4">Top 10 Destinations <span id="region-title" class="visually-hidden">Worldwide</span></h2>
+                <div class="row" id="top-destinations">
+                    <div class="col-12 spinner-container">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading destinations...</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trending Now -->
+            <section aria-labelledby="trending-destinations-heading" class="mb-5">
+                <h2 id="trending-destinations-heading" class="fw-bold mb-4">Trending Now <small class="text-muted">Destinations gaining popularity</small></h2>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="trending-destinations">
+                    <div class="col spinner-container">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading trending destinations...</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seasonal Picks -->
+            <section aria-labelledby="seasonal-destinations-heading" class="mb-5">
+                <h2 id="seasonal-destinations-heading" class="fw-bold mb-4">Seasonal Picks <small class="text-muted">Best for current season</small></h2>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4" id="seasonal-destinations">
+                    <div class="col spinner-container">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading seasonal destinations...</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Methodology -->
+            <section aria-labelledby="methodology-heading" class="bg-light p-4 rounded-3">
+                <h3 id="methodology-heading" class="fw-bold mb-3">How We Rank Destinations</h3>
+                <p>Our ranking algorithm considers multiple real-time factors:</p>
+                <ul class="mb-0">
+                    <li><strong>Booking volume:</strong> Current reservation trends from our partners</li>
+                    <li><strong>Traveler reviews:</strong> Recent ratings and sentiment analysis</li>
+                    <li><strong>Search interest:</strong> What travelers are searching for right now</li>
+                    <li><strong>Seasonal factors:</strong> Weather, events, and local conditions</li>
+                    <li><strong>Social buzz:</strong> Mentions across social media platforms</li>
+                </ul>
+            </section>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer py-4 bg-dark text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h2 class="h5">HolidayFinder</h2>
+                    <p>Your trusted companion for discovering the world's most amazing destinations.</p>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h3 class="h5">Links</h3>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html" class="text-white">Home</a></li>
+                        <li><a href="destinations.html" class="text-white">Destinations</a></li>
+                        <li><a href="deals.html" class="text-white">Deals</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <h3 class="h5">Contact</h3>
+                    <address class="list-unstyled">
+                        <li><i class="fas fa-envelope me-2" aria-hidden="true"></i> hello@holidayfinder.com</li>
+                        <li><i class="fas fa-phone me-2" aria-hidden="true"></i> +1 (555) 123-4567</li>
+                    </address>
+                </div>
+                <div class="col-md-3">
+                    <h3 class="h5">Follow Us</h3>
+                    <div class="social-links">
+                        <a href="#" class="text-white me-3" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
+                        <a href="#" class="text-white me-3" aria-label="Twitter"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+                        <a href="#" class="text-white me-3" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                        <a href="#" class="text-white" aria-label="LinkedIn"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4 bg-light">
+            <div class="text-center">
+                <p class="mb-0">&copy; <span id="current-year">2023</span> HolidayFinder. All rights reserved.</p>
+                <p class="small text-muted mt-2">Last updated: <span id="last-updated">Loading...</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Load scripts with defer -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+    
+    <!-- Destinations JS module -->
+    <script src="assets/js/destinations.js" type="module" defer></script>
+    
+    <!-- Inline script for current year -->
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        document.getElementById('last-updated').textContent = new Date().toLocaleDateString('en-US', {
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric'
+        });
+    </script>
+</body>
+</html>
