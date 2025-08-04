@@ -1,13 +1,28 @@
+// index.js
+import Config from './config.js';
+
 // ================ MODULE PATTERN ================
 const HolidayFinder = (() => {
   // ================ PRIVATE VARIABLES ================
   const config = {
-    apiKey: null, // Will be initialized from server-side
+    apiKey: Config.GOOGLE_MAPS_API_KEY,
     mapOptions: {
       center: { lat: 20, lng: 0 },
       zoom: 2,
       disableDefaultUI: true,
-      gestureHandling: 'greedy'
+      gestureHandling: 'greedy',
+      styles: [
+        {
+          "featureType": "poi",
+          "elementType": "labels",
+          "stylers": [{ "visibility": "off" }]
+        },
+        {
+          "featureType": "transit",
+          "elementType": "labels",
+          "stylers": [{ "visibility": "off" }]
+        }
+      ]
     },
     dateRange: {
       minDays: 0,
@@ -47,7 +62,8 @@ const HolidayFinder = (() => {
         description: "The City of Light known for its art, fashion, and culture.",
         coords: { lat: 48.8566, lng: 2.3522 },
         tags: ["romantic", "cultural"],
-        type: "city"
+        type: "city",
+        image: "https://source.unsplash.com/random/600x400/?paris"
       },
       {
         id: 'tokyo',
@@ -55,7 +71,17 @@ const HolidayFinder = (() => {
         description: "A bustling metropolis blending ultramodern and traditional.",
         coords: { lat: 35.6762, lng: 139.6503 },
         tags: ["modern", "cultural"],
-        type: "city"
+        type: "city",
+        image: "https://source.unsplash.com/random/600x400/?tokyo"
+      },
+      {
+        id: 'new-york',
+        name: "New York, USA",
+        description: "The city that never sleeps with iconic landmarks.",
+        coords: { lat: 40.7128, lng: -74.0060 },
+        tags: ["urban", "shopping"],
+        type: "city",
+        image: "https://source.unsplash.com/random/600x400/?newyork"
       }
     ]
   };
@@ -78,6 +104,18 @@ const HolidayFinder = (() => {
     state.map.addListener('click', (e) => {
       updateFormFromMapClick(e.latLng);
     });
+
+    // Add markers for default destinations
+    state.destinations.forEach(dest => {
+      new google.maps.Marker({
+        position: dest.coords,
+        map: state.map,
+        title: dest.name,
+        icon: {
+          url: `https://maps.google.com/mapfiles/ms/icons/${dest.type === 'city' ? 'red' : 'blue'}-dot.png`
+        }
+      });
+    });
   };
 
   /**
@@ -93,7 +131,8 @@ const HolidayFinder = (() => {
       elements.destinationInput,
       {
         types: ['(cities)'],
-        fields: ['name', 'geometry']
+        fields: ['name', 'geometry'],
+        componentRestrictions: { country: ['us', 'ca', 'gb', 'fr', 'de', 'it', 'es', 'jp', 'au'] }
       }
     );
 
@@ -101,6 +140,8 @@ const HolidayFinder = (() => {
       const place = state.autocomplete.getPlace();
       if (place.geometry) {
         updateMapFromForm(place.name, place.geometry.location);
+      } else {
+        showAlert('Location not found. Please try a different search.', 'error');
       }
     });
   };
@@ -111,6 +152,7 @@ const HolidayFinder = (() => {
   const initDateRangeSlider = () => {
     if (!window.noUiSlider) {
       console.error('noUiSlider not loaded');
+      initDateRangePicker(); // Fallback to simple date picker
       return;
     }
 
@@ -134,6 +176,46 @@ const HolidayFinder = (() => {
       
       elements.dateStartInput.value = formatDate(startDate);
       elements.dateEndInput.value = formatDate(endDate);
+    });
+  };
+
+  /**
+   * Fallback date picker when noUiSlider is not available
+   */
+  const initDateRangePicker = () => {
+    const today = new Date();
+    const nextMonth = new Date();
+    nextMonth.setMonth(today.getMonth() + 1);
+    
+    // Set min dates
+    elements.dateStartInput.min = formatDate(today);
+    elements.dateEndInput.min = formatDate(today);
+    
+    // Set initial values
+    elements.dateStartInput.value = formatDate(today);
+    elements.dateEndInput.value = formatDate(nextMonth);
+    
+    // Add event listeners
+    elements.dateStartInput.addEventListener('change', (e) => {
+      const startDate = new Date(e.target.value);
+      const endDate = new Date(elements.dateEndInput.value);
+      
+      if (startDate > endDate) {
+        const newEndDate = new Date(startDate);
+        newEndDate.setDate(startDate.getDate() + 7);
+        elements.dateEndInput.value = formatDate(newEndDate);
+      }
+      
+      elements.dateEndInput.min = e.target.value;
+    });
+    
+    elements.dateEndInput.addEventListener('change', (e) => {
+      const startDate = new Date(elements.dateStartInput.value);
+      const endDate = new Date(e.target.value);
+      
+      if (endDate < startDate) {
+        elements.dateEndInput.value = formatDate(startDate);
+      }
     });
   };
 
@@ -169,11 +251,11 @@ const HolidayFinder = (() => {
       if (results[0]) {
         updateFormFromMapClick(results[0].geometry.location, address);
       } else {
-        showAlert('Location not found', 'error');
+        showAlert('Location not found. Please try a different search.', 'error');
       }
     } catch (error) {
       console.error('Geocoding error:', error);
-      showAlert('Error finding location', 'error');
+      showAlert('Error finding location. Please try again.', 'error');
     }
   };
 
@@ -195,6 +277,8 @@ const HolidayFinder = (() => {
         addMarker(location, locationName);
         highlightBookingSection();
         updateDynamicOffer(locationName);
+      } else {
+        showAlert('Could not get location details. Please try again.', 'error');
       }
     });
   };
@@ -209,7 +293,10 @@ const HolidayFinder = (() => {
       position: location,
       map: state.map,
       title: title,
-      animation: google.maps.Animation.DROP
+      animation: google.maps.Animation.DROP,
+      icon: {
+        url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
+      }
     });
 
     state.markers.push(marker);
@@ -262,15 +349,27 @@ const HolidayFinder = (() => {
    * Show alert message
    */
   const showAlert = (message, type = 'info') => {
+    // Remove any existing alerts first
+    document.querySelectorAll('.alert.fixed-top').forEach(el => el.remove());
+
     const alert = document.createElement('div');
-    alert.className = `alert alert-${type} fixed-top mt-5 mx-3`;
-    alert.textContent = message;
+    alert.className = `alert alert-${type} fixed-top mt-5 mx-3 animate__animated animate__fadeInDown`;
     alert.setAttribute('role', 'alert');
+    
+    alert.innerHTML = `
+      <div class="d-flex align-items-center">
+        <i class="fas ${type === 'error' ? 'fa-exclamation-circle' : type === 'success' ? 'fa-check-circle' : 'fa-info-circle'} me-2"></i>
+        <div>${message}</div>
+      </div>
+    `;
     
     document.body.appendChild(alert);
     
     setTimeout(() => {
-      alert.remove();
+      alert.classList.add('animate__fadeOutUp');
+      setTimeout(() => {
+        alert.remove();
+      }, 300);
     }, 5000);
   };
 
@@ -282,12 +381,13 @@ const HolidayFinder = (() => {
     
     state.destinations.forEach(dest => {
       const card = document.createElement('div');
-      card.className = 'col-12 mb-3';
+      card.className = 'col-12 mb-3 animate__animated animate__fadeIn';
+      card.style.animationDelay = `${state.destinations.indexOf(dest) * 0.1}s`;
       card.innerHTML = `
         <div class="destination-card" data-id="${dest.id}" data-lat="${dest.coords.lat}" data-lng="${dest.coords.lng}">
-          <img src="https://source.unsplash.com/random/600x400/?${dest.name.split(',')[0]}" 
+          <img src="${dest.image}" 
                alt="${dest.name}" 
-               class="img-fluid w-100" 
+               class="img-fluid w-100 rounded-top" 
                loading="lazy">
           <div class="p-3">
             <h5>${dest.name}</h5>
@@ -324,6 +424,15 @@ const HolidayFinder = (() => {
       return;
     }
 
+    // Show loading state
+    const submitBtn = elements.bookingForm.querySelector('#submit-booking');
+    const originalBtnText = submitBtn.innerHTML;
+    submitBtn.innerHTML = `
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      Processing...
+    `;
+    submitBtn.disabled = true;
+
     const bookingData = {
       destination,
       dateStart,
@@ -335,20 +444,19 @@ const HolidayFinder = (() => {
     };
 
     try {
-      // In a real app, you would send to your backend
-      // const response = await fetch('/api/bookings', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(bookingData)
-      // });
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
       console.log('Booking submitted:', bookingData);
-      showAlert(`Booking request submitted for ${destination}!`, 'success');
+      showAlert(`Booking request submitted for ${destination}! We'll contact you shortly.`, 'success');
       elements.bookingForm.reset();
       clearMarkers();
     } catch (error) {
       console.error('Booking error:', error);
-      showAlert('Error submitting booking', 'error');
+      showAlert('Error submitting booking. Please try again.', 'error');
+    } finally {
+      submitBtn.innerHTML = originalBtnText;
+      submitBtn.disabled = false;
     }
   };
 
@@ -359,8 +467,9 @@ const HolidayFinder = (() => {
     // Search functionality
     elements.searchBtn.addEventListener('click', () => {
       if (elements.searchInput.value.trim()) {
-        // In a full implementation, this would search destinations
-        showAlert('Search functionality would be implemented here', 'info');
+        geocodeAddress(elements.searchInput.value);
+      } else {
+        showAlert('Please enter a search term first', 'error');
       }
     });
 
@@ -375,56 +484,115 @@ const HolidayFinder = (() => {
 
     // Use current location
     elements.useLocationBtn.addEventListener('click', () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            state.currentLocation = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
-            updateFormFromMapClick(state.currentLocation, "Your Location");
-          },
-          (error) => {
-            console.error('Geolocation error:', error);
-            showAlert('Unable to get your location', 'error');
-          },
-          { timeout: 10000 }
-        );
-      } else {
-        showAlert('Geolocation not supported by your browser', 'error');
-      }
+      elements.useLocationBtn.innerHTML = `
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Locating...
+      `;
+      elements.useLocationBtn.disabled = true;
+
+      getCurrentLocation()
+        .then(position => {
+          state.currentLocation = position;
+          updateFormFromMapClick(position, "Your Location");
+        })
+        .catch(error => {
+          console.error('Geolocation error:', error);
+          showAlert('Unable to get your location. Please ensure location services are enabled.', 'error');
+        })
+        .finally(() => {
+          elements.useLocationBtn.innerHTML = `
+            <i class="fas fa-location-arrow" aria-hidden="true"></i> Use My Location
+          `;
+          elements.useLocationBtn.disabled = false;
+        });
     });
 
     // Filter buttons
     elements.filterButtons.forEach(btn => {
       btn.addEventListener('click', () => {
-        elements.filterButtons.forEach(b => b.classList.remove('active'));
+        elements.filterButtons.forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-selected', 'false');
+        });
         btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+        
         // In a full implementation, this would filter results
+        showAlert(`Showing ${btn.dataset.type === 'all' ? 'all' : btn.dataset.type} results`, 'info');
       });
     });
 
     // View offers button
     elements.viewOffersBtn.addEventListener('click', () => {
-      showAlert('Viewing all available offers', 'info');
+      window.location.href = 'deals.html';
     });
 
     // Form submission
     elements.bookingForm.addEventListener('submit', handleBookingSubmit);
+
+    // Clear form button
+    document.getElementById('clear-booking').addEventListener('click', () => {
+      elements.bookingForm.reset();
+      clearMarkers();
+      showAlert('Form cleared', 'info');
+    });
+
+    // Search input enter key
+    elements.searchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        elements.searchBtn.click();
+      }
+    });
+  };
+
+  /**
+   * Get current location with better error handling
+   */
+  const getCurrentLocation = () => {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject(new Error('Geolocation not supported by your browser'));
+        return;
+      }
+      
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      };
+      
+      navigator.geolocation.getCurrentPosition(
+        (position) => resolve({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        }),
+        (error) => {
+          let errorMessage;
+          switch(error.code) {
+            case error.PERMISSION_DENIED:
+              errorMessage = "Location access was denied. Please enable it in your browser settings.";
+              break;
+            case error.POSITION_UNAVAILABLE:
+              errorMessage = "Location information is unavailable.";
+              break;
+            case error.TIMEOUT:
+              errorMessage = "The request to get your location timed out.";
+              break;
+            default:
+              errorMessage = "An unknown error occurred.";
+          }
+          reject(new Error(errorMessage));
+        },
+        options
+      );
+    });
   };
 
   /**
    * Initialize the application
    */
   const init = () => {
-    // Load configuration from server in a real app
-    // fetch('/api/config')
-    //   .then(res => res.json())
-    //   .then(data => {
-    //     config.apiKey = data.mapsApiKey;
-    //     initMap();
-    //   });
-    
     initMap();
     initAutocomplete();
     initDateRangeSlider();
@@ -444,7 +612,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load Google Maps API safely
   const loadGoogleMaps = () => {
     const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${HolidayFinder.config?.apiKey || 'YOUR_API_KEY'}&libraries=places&callback=initMap`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${Config.GOOGLE_MAPS_API_KEY}&libraries=places&callback=initMap`;
     script.async = true;
     script.defer = true;
     document.head.appendChild(script);
@@ -463,12 +631,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load required scripts
   if (!window.google || !window.google.maps) {
     loadGoogleMaps();
+  } else {
+    HolidayFinder.init();
   }
   
   if (!window.noUiSlider) {
     loadNoUiSlider();
-  } else {
-    HolidayFinder.init();
   }
 });
 

@@ -1,0 +1,135 @@
+:root {
+    --primary: #4285F4;
+    --secondary: #34A853;
+    --accent: #EA4335;
+    --light: #f5f5f5;
+    --dark: #333;
+    --gray: #757575;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--dark);
+    background-color: #f9f9f9;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+body.page-transition {
+    opacity: 0.8;
+}
+
+.deals-hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url('https://images.unsplash.com/photo-1503917988258-f87a78e3c995?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
+    background-size: cover;
+    padding: 120px 0 80px;
+    color: white;
+    text-align: center;
+}
+
+.badge-ribbon {
+    position: absolute;
+    top: 15px;
+    right: -30px;
+    padding: 5px 30px;
+    background-color: var(--accent);
+    color: white;
+    font-weight: bold;
+    transform: rotate(45deg);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    width: 120px;
+    text-align: center;
+}
+
+.deal-card,
+.deal-card-horizontal {
+    transition: all 0.3s ease;
+    border: none;
+    overflow: hidden;
+    backface-visibility: hidden;
+}
+
+.deal-card:hover,
+.deal-card-horizontal:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+.deal-details {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+    color: var(--gray);
+}
+
+.detail-item i {
+    color: var(--primary);
+}
+
+.loading-spinner {
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.skeleton-loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    color: transparent;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Responsive styles */
+@media (max-width: 767.98px) {
+    .deals-hero {
+        padding: 80px 0 40px;
+    }
+
+    .deals-hero h1 {
+        font-size: 2rem;
+    }
+
+    .deals-hero p.lead {
+        font-size: 1.1rem;
+    }
+
+    .deal-card-horizontal .col-md-5 {
+        height: 200px;
+    }
+
+    .deal-card-horizontal img {
+        object-fit: cover;
+        height: 100%;
+    }
+
+    .filter-form .row>div {
+        margin-bottom: 15px;
+    }
+}
+
+/* Accessibility improvements */
+:focus {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+}

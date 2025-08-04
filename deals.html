@@ -19,87 +19,10 @@
     <!-- CSS with fallbacks -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     
-    <!-- Inline critical CSS -->
-    <style>
-        :root {
-            --primary: #4285F4;
-            --secondary: #34A853;
-            --accent: #EA4335;
-            --light: #f5f5f5;
-            --dark: #333;
-            --gray: #757575;
-        }
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            color: var(--dark);
-            background-color: #f9f9f9;
-        }
-        
-        .deals-hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
-                        url('https://images.unsplash.com/photo-1503917988258-f87a78e3c995?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
-            background-size: cover;
-            padding: 120px 0 80px;
-            color: white;
-            text-align: center;
-        }
-        
-        .badge-ribbon {
-            position: absolute;
-            top: 15px;
-            right: -30px;
-            padding: 5px 30px;
-            background-color: var(--accent);
-            color: white;
-            font-weight: bold;
-            transform: rotate(45deg);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-            width: 120px;
-            text-align: center;
-        }
-        
-        .deal-card, .deal-card-horizontal {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: none;
-            overflow: hidden;
-        }
-        
-        .deal-card:hover, .deal-card-horizontal:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
-        }
-        
-        .deal-details {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .detail-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.9rem;
-            color: var(--gray);
-        }
-        
-        .detail-item i {
-            color: var(--primary);
-        }
-        
-        .loading-spinner {
-            min-height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    </style>
-    
-    <!-- Non-critical CSS loaded asynchronously -->
-    <link rel="stylesheet" href="assets/css/style.css" media="print" onload="this.media='all'">
+    <!-- Critical CSS -->
+    <link rel="stylesheet" href="assets/css/deals.css" type="text/css">
 </head>
 
 <body class="deals-page">
@@ -134,8 +57,8 @@
     <!-- Hero Section -->
     <header class="deals-hero">
         <div class="container">
-            <h1 class="display-4 fw-bold mb-3">Exclusive Holiday Deals</h1>
-            <p class="lead mb-4">Discover amazing offers tailored just for you</p>
+            <h1 class="display-4 fw-bold mb-3 animate__animated animate__fadeIn">Exclusive Holiday Deals</h1>
+            <p class="lead mb-4 animate__animated animate__fadeIn animate__delay-1">Discover amazing offers tailored just for you</p>
         </div>
     </header>
 
@@ -146,7 +69,7 @@
             <section aria-labelledby="deal-filters-heading" class="mb-5">
                 <div class="row">
                     <div class="col-12">
-                        <div class="card shadow-sm">
+                        <div class="card shadow-sm animate__animated animate__fadeIn animate__delay-2">
                             <div class="card-body">
                                 <h2 id="deal-filters-heading" class="card-title mb-4"><i class="fas fa-filter me-2" aria-hidden="true"></i>Filter Deals</h2>
                                 <form id="deal-filters">
@@ -220,10 +143,15 @@
             <section aria-labelledby="featured-deals-heading" class="mb-5">
                 <h2 id="featured-deals-heading" class="mb-4"><i class="fas fa-star me-2" aria-hidden="true"></i>Featured Deals</h2>
                 <div class="row" id="featured-deals">
-                    <div class="col-12 loading-spinner">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading featured deals...</span>
-                        </div>
+                    <!-- Skeleton loading state -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 skeleton-loading" style="height: 400px;"></div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 skeleton-loading" style="height: 400px;"></div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 skeleton-loading" style="height: 400px;"></div>
                     </div>
                 </div>
             </section>
@@ -245,10 +173,18 @@
                 </div>
 
                 <div class="row" id="all-deals">
-                    <div class="col-12 loading-spinner">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading all deals...</span>
-                        </div>
+                    <!-- Skeleton loading state -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="card skeleton-loading" style="height: 250px;"></div>
+                    </div>
+                    <div class="col-lg-6 mb-4">
+                        <div class="card skeleton-loading" style="height: 250px;"></div>
+                    </div>
+                    <div class="col-lg-6 mb-4">
+                        <div class="card skeleton-loading" style="height: 250px;"></div>
+                    </div>
+                    <div class="col-lg-6 mb-4">
+                        <div class="card skeleton-loading" style="height: 250px;"></div>
                     </div>
                 </div>
 
@@ -356,6 +292,19 @@
             year: 'numeric', 
             month: 'long', 
             day: 'numeric'
+        });
+        
+        // Smooth page transitions
+        document.querySelectorAll('a').forEach(link => {
+            if (link.href && !link.hash && link.hostname === window.location.hostname) {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.body.classList.add('page-transition');
+                    setTimeout(() => {
+                        window.location.href = link.href;
+                    }, 300);
+                });
+            }
         });
     </script>
 </body>

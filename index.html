@@ -21,8 +21,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.css">
     
-    <!-- Non-critical CSS loaded asynchronously -->
-    <link rel="stylesheet" href="assets/css/style.css" media="print" onload="this.media='all'">
+    <!-- Critical CSS -->
+    <link rel="stylesheet" href="assets/css/index.css" type="text/css">
 </head>
 
 <body class="index-page">
@@ -57,9 +57,9 @@
     <!-- Hero Section -->
     <header class="hero">
         <div id="contain" class="container">
-            <h1 class="display-4 fw-bold mb-3">Find Your Perfect Holiday Destination</h1>
-            <p class="lead mb-4">Discover amazing places tailored to your preferences</p>
-            <div class="row justify-content-center">
+            <h1 class="display-4 fw-bold mb-3 animate__fadeIn">Find Your Perfect Holiday Destination</h1>
+            <p class="lead mb-4 animate__fadeIn animate__delay-1">Discover amazing places tailored to your preferences</p>
+            <div class="row justify-content-center animate__fadeIn animate__delay-2">
                 <div class="col-md-8">
                     <div class="input-group search-box">
                         <label for="search-input" class="visually-hidden">Search for destinations</label>
@@ -98,7 +98,7 @@
                     </section>
 
                     <!-- Enhanced Booking Section -->
-                    <section aria-labelledby="booking-heading" class="mt-5">
+                    <section aria-labelledby="booking-heading" class="mt-5" id="booking-section">
                         <div class="card shadow">
                             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                                 <h3 id="booking-heading" class="mb-0"><i class="fas fa-calendar-alt me-2" aria-hidden="true"></i>Book Your Trip</h3>
@@ -180,12 +180,11 @@
                         <section aria-labelledby="popular-destinations-heading">
                             <h2 id="popular-destinations-heading" class="mb-4">Popular Destinations</h2>
                             <div class="row" id="popular-destinations">
-                                <!-- Destination cards populated by JavaScript -->
-                                <div class="col-12 text-center py-4">
-                                    <div class="spinner-border text-primary" role="status">
-                                        <span class="visually-hidden">Loading destinations...</span>
-                                    </div>
-                                    <p class="mt-2">Loading popular destinations...</p>
+                                <!-- Skeleton loading state -->
+                                <div class="col-12">
+                                    <div class="card skeleton-loading" style="height: 120px; margin-bottom: 15px;"></div>
+                                    <div class="card skeleton-loading" style="height: 120px; margin-bottom: 15px;"></div>
+                                    <div class="card skeleton-loading" style="height: 120px;"></div>
                                 </div>
                             </div>
                         </section>
@@ -259,6 +258,24 @@
     <!-- Inline script for current year -->
     <script>
         document.getElementById('current-year').textContent = new Date().getFullYear();
+        document.getElementById('last-updated').textContent = new Date().toLocaleDateString('en-US', {
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric'
+        });
+        
+        // Smooth page transitions
+        document.querySelectorAll('a').forEach(link => {
+            if (link.href && !link.hash && link.hostname === window.location.hostname) {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.body.classList.add('page-transition');
+                    setTimeout(() => {
+                        window.location.href = link.href;
+                    }, 300);
+                });
+            }
+        });
     </script>
 </body>
 </html>

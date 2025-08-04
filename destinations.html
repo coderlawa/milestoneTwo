@@ -19,45 +19,10 @@
     <!-- CSS with fallbacks -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     
-    <!-- Inline critical CSS -->
-    <style>
-        .destinations-hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
-                        url('https://images.unsplash.com/photo-1503917988258-f87a78e3c995?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
-            background-size: cover;
-            padding: 120px 0 80px;
-            color: white;
-            text-align: center;
-        }
-        
-        /* Ranking badge styles */
-        .ranking-badge {
-            width: 32px;
-            height: 32px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-weight: bold;
-            margin-right: 12px;
-        }
-        
-        .gold { background-color: #FFD700; color: #000; }
-        .silver { background-color: #C0C0C0; color: #000; }
-        .bronze { background-color: #CD7F32; color: #000; }
-        
-        /* Loading spinner */
-        .spinner-container {
-            min-height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    </style>
-    
-    <!-- Non-critical CSS loaded asynchronously -->
-    <link rel="stylesheet" href="assets/css/style.css" media="print" onload="this.media='all'">
+    <!-- Critical CSS -->
+    <link rel="stylesheet" href="assets/css/destinations.css" type="text/css">
 </head>
 
 <body class="destinations-page">
@@ -94,13 +59,13 @@
         <div class="container py-5">
             <div class="row">
                 <div class="col-lg-8 mx-auto text-center">
-                    <h1 class="display-4 fw-bold mb-3">Popular Destinations</h1>
-                    <p class="lead">Discover the world's most sought-after travel spots based on real-time traveler data</p>
-                    <div class="d-flex justify-content-center mt-4 flex-wrap" role="tablist">
-                        <button type="button" class="btn btn-outline-primary active me-2 mb-2" id="btn-global" role="tab" aria-selected="true">Global</button>
-                        <button type="button" class="btn btn-outline-primary me-2 mb-2" id="btn-europe" role="tab" aria-selected="false">Europe</button>
-                        <button type="button" class="btn btn-outline-primary me-2 mb-2" id="btn-asia" role="tab" aria-selected="false">Asia</button>
-                        <button type="button" class="btn btn-outline-primary mb-2" id="btn-americas" role="tab" aria-selected="false">Americas</button>
+                    <h1 class="display-4 fw-bold mb-3 animate__animated animate__fadeIn">Popular Destinations</h1>
+                    <p class="lead animate__animated animate__fadeIn animate__delay-1">Discover the world's most sought-after travel spots based on real-time traveler data</p>
+                    <div class="d-flex justify-content-center mt-4 flex-wrap region-buttons" role="tablist">
+                        <button type="button" class="btn btn-outline-primary active me-2 mb-2 animate__animated animate__fadeIn animate__delay-2" id="btn-global" role="tab" aria-selected="true">Global</button>
+                        <button type="button" class="btn btn-outline-primary me-2 mb-2 animate__animated animate__fadeIn animate__delay-3" id="btn-europe" role="tab" aria-selected="false">Europe</button>
+                        <button type="button" class="btn btn-outline-primary me-2 mb-2 animate__animated animate__fadeIn animate__delay-4" id="btn-asia" role="tab" aria-selected="false">Asia</button>
+                        <button type="button" class="btn btn-outline-primary mb-2 animate__animated animate__fadeIn animate__delay-5" id="btn-americas" role="tab" aria-selected="false">Americas</button>
                     </div>
                 </div>
             </div>
@@ -110,7 +75,7 @@
     <!-- Main Content -->
     <main id="main-content" class="py-5">
         <div class="container">
-            <div class="alert alert-info d-flex align-items-center mb-4">
+            <div class="alert alert-info d-flex align-items-center mb-4 animate__animated animate__fadeIn">
                 <i class="fas fa-sync-alt me-3 fa-lg" aria-hidden="true"></i>
                 <div>These rankings are updated hourly based on current booking trends.</div>
             </div>
@@ -119,10 +84,12 @@
             <section aria-labelledby="top-destinations-heading" class="mb-5">
                 <h2 id="top-destinations-heading" class="fw-bold mb-4">Top 10 Destinations <span id="region-title" class="visually-hidden">Worldwide</span></h2>
                 <div class="row" id="top-destinations">
-                    <div class="col-12 spinner-container">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading destinations...</span>
-                        </div>
+                    <!-- Skeleton loading state -->
+                    <div class="col-12">
+                        <div class="card skeleton-loading" style="height: 120px; margin-bottom: 15px;"></div>
+                        <div class="card skeleton-loading" style="height: 120px; margin-bottom: 15px;"></div>
+                        <div class="card skeleton-loading" style="height: 120px; margin-bottom: 15px;"></div>
+                        <div class="card skeleton-loading" style="height: 120px;"></div>
                     </div>
                 </div>
             </section>
@@ -131,10 +98,15 @@
             <section aria-labelledby="trending-destinations-heading" class="mb-5">
                 <h2 id="trending-destinations-heading" class="fw-bold mb-4">Trending Now <small class="text-muted">Destinations gaining popularity</small></h2>
                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="trending-destinations">
-                    <div class="col spinner-container">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading trending destinations...</span>
-                        </div>
+                    <!-- Skeleton loading state -->
+                    <div class="col">
+                        <div class="card h-100 skeleton-loading" style="height: 300px;"></div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100 skeleton-loading" style="height: 300px;"></div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100 skeleton-loading" style="height: 300px;"></div>
                     </div>
                 </div>
             </section>
@@ -143,16 +115,24 @@
             <section aria-labelledby="seasonal-destinations-heading" class="mb-5">
                 <h2 id="seasonal-destinations-heading" class="fw-bold mb-4">Seasonal Picks <small class="text-muted">Best for current season</small></h2>
                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4" id="seasonal-destinations">
-                    <div class="col spinner-container">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading seasonal destinations...</span>
-                        </div>
+                    <!-- Skeleton loading state -->
+                    <div class="col">
+                        <div class="card h-100 skeleton-loading" style="height: 250px;"></div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100 skeleton-loading" style="height: 250px;"></div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100 skeleton-loading" style="height: 250px;"></div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100 skeleton-loading" style="height: 250px;"></div>
                     </div>
                 </div>
             </section>
 
             <!-- Methodology -->
-            <section aria-labelledby="methodology-heading" class="bg-light p-4 rounded-3">
+            <section aria-labelledby="methodology-heading" class="bg-light p-4 rounded-3 animate__animated animate__fadeIn">
                 <h3 id="methodology-heading" class="fw-bold mb-3">How We Rank Destinations</h3>
                 <p>Our ranking algorithm considers multiple real-time factors:</p>
                 <ul class="mb-0">
@@ -220,6 +200,19 @@
             year: 'numeric', 
             month: 'long', 
             day: 'numeric'
+        });
+        
+        // Smooth page transitions
+        document.querySelectorAll('a').forEach(link => {
+            if (link.href && !link.hash && link.hostname === window.location.hostname) {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.body.classList.add('page-transition');
+                    setTimeout(() => {
+                        window.location.href = link.href;
+                    }, 300);
+                });
+            }
         });
     </script>
 </body>

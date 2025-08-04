@@ -24,14 +24,8 @@ const DealsModule = (() => {
     // Private methods
     const fetchDeals = async (type = 'all', page = 1) => {
         try {
-            // In production, this would be a real API call with filters
-            // const params = new URLSearchParams({
-            //     ...currentFilters,
-            //     page,
-            //     featured: type === 'featured'
-            // });
-            // const response = await fetch(`${API_ENDPOINT}?${params}`);
-            // const data = await response.json();
+            // Simulate API call delay
+            await new Promise(resolve => setTimeout(resolve, 800));
             
             // Mock data for demonstration
             return {
@@ -73,7 +67,9 @@ const DealsModule = (() => {
                 duration: `${3 + (i % 5)} Days / ${2 + (i % 5)} Nights`,
                 travelers: `${1 + (i % 4)} Adults`,
                 badge: ['Limited Time', 'Popular', 'New', 'Last Minute'][i % 4],
-                badgeClass: ['success', 'danger', 'info', 'warning'][i % 4]
+                badgeClass: ['success', 'danger', 'info', 'warning'][i % 4],
+                rating: (4 + Math.random()).toFixed(1),
+                reviews: Math.floor(Math.random() * 100) + 1
             };
         });
     };
@@ -81,6 +77,7 @@ const DealsModule = (() => {
     const renderDealCard = (deal, isHorizontal = false) => {
         const card = document.createElement('div');
         card.className = isHorizontal ? 'col-lg-6 mb-4' : 'col-lg-4 col-md-6 mb-4';
+        card.classList.add('animate__animated', 'animate__fadeIn');
         
         if (isHorizontal) {
             card.innerHTML = `
@@ -89,12 +86,19 @@ const DealsModule = (() => {
                         <div class="col-md-5 position-relative">
                             <img src="${deal.image}" class="img-fluid rounded-start h-100" alt="${deal.title}" loading="lazy">
                             <div class="badge-ribbon">-${deal.discount}%</div>
+                            <div class="position-absolute top-0 start-0 m-2">
+                                <span class="badge bg-${deal.badgeClass}">${deal.badge}</span>
+                            </div>
                         </div>
                         <div class="col-md-7">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <h3 class="h5 card-title mb-0">${deal.title}</h3>
-                                    <span class="badge bg-${deal.badgeClass}">${deal.badge}</span>
+                                    <div>
+                                        <span class="badge bg-light text-dark">
+                                            <i class="fas fa-star text-warning"></i> ${deal.rating} (${deal.reviews})
+                                        </span>
+                                    </div>
                                 </div>
                                 <p class="card-text text-muted small"><i class="fas fa-map-marker-alt me-1"></i> ${deal.destination}</p>
                                 <p class="card-text">${deal.description}</p>
@@ -129,12 +133,19 @@ const DealsModule = (() => {
         } else {
             card.innerHTML = `
                 <div class="card deal-card h-100">
-                    <div class="badge-ribbon">-${deal.discount}%</div>
-                    <img src="${deal.image}" class="card-img-top" alt="${deal.title}" loading="lazy">
+                    <div class="position-relative">
+                        <img src="${deal.image}" class="card-img-top" alt="${deal.title}" loading="lazy">
+                        <div class="badge-ribbon">-${deal.discount}%</div>
+                        <div class="position-absolute top-0 start-0 m-2">
+                            <span class="badge bg-${deal.badgeClass}">${deal.badge}</span>
+                        </div>
+                    </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start mb-2">
                             <h3 class="h5 card-title mb-0">${deal.title}</h3>
-                            <span class="badge bg-${deal.badgeClass}">${deal.badge}</span>
+                            <span class="badge bg-light text-dark">
+                                <i class="fas fa-star text-warning"></i> ${deal.rating} (${deal.reviews})
+                            </span>
                         </div>
                         <p class="card-text text-muted small"><i class="fas fa-map-marker-alt me-1"></i> ${deal.destination}</p>
                         <p class="card-text">${deal.description}</p>
@@ -176,13 +187,35 @@ const DealsModule = (() => {
             </li>
         `;
         
-        for (let i = 1; i <= totalPages; i++) {
-            paginationHTML += `
-                <li class="page-item ${i === currentPage ? 'active' : ''}">
-                    <a class="page-link" href="#" data-page="${i}" aria-label="Page ${i}">${i}</a>
-                </li>
-            `;
+        // Show first page, current page with neighbors, and last page
+        const pagesToShow = [];
+        pagesToShow.push(1);
+        
+        if (currentPage > 3) pagesToShow.push('...');
+        
+        for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+            pagesToShow.push(i);
         }
+        
+        if (currentPage < totalPages - 2) pagesToShow.push('...');
+        
+        if (totalPages > 1) pagesToShow.push(totalPages);
+        
+        pagesToShow.forEach(page => {
+            if (page === '...') {
+                paginationHTML += `
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                `;
+            } else {
+                paginationHTML += `
+                    <li class="page-item ${page === currentPage ? 'active' : ''}">
+                        <a class="page-link" href="#" data-page="${page}" aria-label="Page ${page}">${page}</a>
+                    </li>
+                `;
+            }
+        });
         
         paginationHTML += `
             <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
@@ -219,6 +252,47 @@ const DealsModule = (() => {
         element.querySelector('.retry-loading').addEventListener('click', loadDeals);
     };
     
+    const applyFilters = () => {
+        currentFilters = {
+            dealType: document.getElementById('deal-type').value,
+            destination: document.getElementById('destination-filter').value,
+            priceRange: document.getElementById('price-range').value,
+            travelMonth: document.getElementById('travel-month').value,
+            sortBy: document.getElementById('sort-deals').value
+        };
+        
+        // Update URL without reloading
+        const url = new URL(window.location);
+        Object.entries(currentFilters).forEach(([key, value]) => {
+            url.searchParams.set(key, value);
+        });
+        window.history.pushState({}, '', url);
+        
+        // Reset to first page when filters change
+        currentPage = 1;
+        loadDeals();
+    };
+    
+    const parseUrlFilters = () => {
+        const url = new URL(window.location);
+        const filters = {
+            dealType: url.searchParams.get('dealType') || 'all',
+            destination: url.searchParams.get('destination') || 'all',
+            priceRange: url.searchParams.get('priceRange') || 'all',
+            travelMonth: url.searchParams.get('travelMonth') || 'all',
+            sortBy: url.searchParams.get('sortBy') || 'popular'
+        };
+        
+        // Apply to form controls
+        document.getElementById('deal-type').value = filters.dealType;
+        document.getElementById('destination-filter').value = filters.destination;
+        document.getElementById('price-range').value = filters.priceRange;
+        document.getElementById('travel-month').value = filters.travelMonth;
+        document.getElementById('sort-deals').value = filters.sortBy;
+        
+        return filters;
+    };
+    
     const loadDeals = async () => {
         // Load featured deals
         showLoadingState(elements.featuredDeals);
@@ -226,8 +300,10 @@ const DealsModule = (() => {
         
         if (featuredData) {
             elements.featuredDeals.innerHTML = '';
-            featuredData.deals.forEach(deal => {
-                elements.featuredDeals.appendChild(renderDealCard(deal));
+            featuredData.deals.forEach((deal, index) => {
+                const card = renderDealCard(deal);
+                card.style.animationDelay = `${index * 0.1}s`;
+                elements.featuredDeals.appendChild(card);
             });
         } else {
             showErrorState(elements.featuredDeals);
@@ -239,8 +315,10 @@ const DealsModule = (() => {
         
         if (allDealsData) {
             elements.allDeals.innerHTML = '';
-            allDealsData.deals.forEach(deal => {
-                elements.allDeals.appendChild(renderDealCard(deal, true));
+            allDealsData.deals.forEach((deal, index) => {
+                const card = renderDealCard(deal, true);
+                card.style.animationDelay = `${index * 0.1}s`;
+                elements.allDeals.appendChild(card);
             });
             renderPagination(currentPage, allDealsData.pagination.totalPages);
         } else {
@@ -252,20 +330,20 @@ const DealsModule = (() => {
         // Filter form submission
         elements.dealFilters.addEventListener('submit', (e) => {
             e.preventDefault();
-            currentFilters = {
-                dealType: document.getElementById('deal-type').value,
-                destination: document.getElementById('destination-filter').value,
-                priceRange: document.getElementById('price-range').value,
-                travelMonth: document.getElementById('travel-month').value,
-                sortBy: currentFilters.sortBy
-            };
-            loadDeals();
+            applyFilters();
+        });
+        
+        // Reset filters
+        elements.dealFilters.addEventListener('reset', () => {
+            setTimeout(() => {
+                applyFilters();
+            }, 0);
         });
         
         // Sort selection change
         elements.sortDeals.addEventListener('change', (e) => {
             currentFilters.sortBy = e.target.value;
-            loadDeals();
+            applyFilters();
         });
         
         // Pagination click
@@ -285,10 +363,23 @@ const DealsModule = (() => {
         elements.newsletterForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const email = e.target.querySelector('input[type="email"]').value;
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
             
-            // In a real app, this would submit to your backend
-            alert(`Thank you for subscribing with: ${email}`);
-            e.target.reset();
+            // Show loading state
+            submitBtn.innerHTML = `
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Subscribing...
+            `;
+            submitBtn.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                alert(`Thank you for subscribing with: ${email}`);
+                e.target.reset();
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+            }, 1000);
         });
         
         // Delegate deal view buttons
@@ -299,12 +390,33 @@ const DealsModule = (() => {
                 alert(`Viewing deal with ID: ${dealId}`);
             }
         });
+        
+        // Handle back/forward navigation
+        window.addEventListener('popstate', () => {
+            currentFilters = parseUrlFilters();
+            loadDeals();
+        });
     };
     
     // Public methods
     const init = () => {
+        currentFilters = parseUrlFilters();
         setupEventListeners();
         loadDeals();
+        
+        // Add intersection observer for lazy loading and animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate__fadeInUp');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.deal-card, .deal-card-horizontal').forEach(card => {
+            observer.observe(card);
+        });
     };
     
     return {
