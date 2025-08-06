@@ -1,26 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Find exclusive holiday deals with HolidayFinder">
     <meta name="theme-color" content="#4285F4">
-    
+
     <!-- Preload critical resources -->
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"></noscript>
-    
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style"
+        onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    </noscript>
+
     <title>Exclusive Holiday Deals | HolidayFinder</title>
-    
+
     <!-- Preconnect to external domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
+
     <!-- CSS with fallbacks -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    
+
     <!-- Critical CSS -->
     <link rel="stylesheet" href="assets/css/deals.css" type="text/css">
 </head>
@@ -28,14 +33,15 @@
 <body class="deals-page">
     <!-- Skip to content link for accessibility -->
     <a href="#main-content" class="visually-hidden-focusable">Skip to main content</a>
-    
+
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm" aria-label="Main navigation">
         <div class="container">
             <a class="navbar-brand fw-bold text-primary" href="index.html">
                 <i class="fas fa-map-marked-alt me-2" aria-hidden="true"></i>HolidayFinder
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -58,7 +64,8 @@
     <header class="deals-hero">
         <div class="container">
             <h1 class="display-4 fw-bold mb-3 animate__animated animate__fadeIn">Exclusive Holiday Deals</h1>
-            <p class="lead mb-4 animate__animated animate__fadeIn animate__delay-1">Discover amazing offers tailored just for you</p>
+            <p class="lead mb-4 animate__animated animate__fadeIn animate__delay-1">Discover amazing offers tailored
+                just for you</p>
         </div>
     </header>
 
@@ -71,7 +78,8 @@
                     <div class="col-12">
                         <div class="card shadow-sm animate__animated animate__fadeIn animate__delay-2">
                             <div class="card-body">
-                                <h2 id="deal-filters-heading" class="card-title mb-4"><i class="fas fa-filter me-2" aria-hidden="true"></i>Filter Deals</h2>
+                                <h2 id="deal-filters-heading" class="card-title mb-4"><i class="fas fa-filter me-2"
+                                        aria-hidden="true"></i>Filter Deals</h2>
                                 <form id="deal-filters">
                                     <div class="row">
                                         <div class="col-md-3 mb-3">
@@ -86,7 +94,8 @@
                                         </div>
                                         <div class="col-md-3 mb-3">
                                             <label for="destination-filter" class="form-label">Destination</label>
-                                            <select class="form-select" id="destination-filter" aria-label="Filter by destination">
+                                            <select class="form-select" id="destination-filter"
+                                                aria-label="Filter by destination">
                                                 <option value="all">Any Destination</option>
                                                 <option value="europe">Europe</option>
                                                 <option value="asia">Asia</option>
@@ -97,7 +106,8 @@
                                         </div>
                                         <div class="col-md-3 mb-3">
                                             <label for="price-range" class="form-label">Price Range</label>
-                                            <select class="form-select" id="price-range" aria-label="Filter by price range">
+                                            <select class="form-select" id="price-range"
+                                                aria-label="Filter by price range">
                                                 <option value="all">Any Price</option>
                                                 <option value="0-500">Under $500</option>
                                                 <option value="500-1000">$500 - $1000</option>
@@ -107,7 +117,8 @@
                                         </div>
                                         <div class="col-md-3 mb-3">
                                             <label for="travel-month" class="form-label">Travel Month</label>
-                                            <select class="form-select" id="travel-month" aria-label="Filter by travel month">
+                                            <select class="form-select" id="travel-month"
+                                                aria-label="Filter by travel month">
                                                 <option value="all">Any Month</option>
                                                 <option value="1">January</option>
                                                 <option value="2">February</option>
@@ -125,7 +136,8 @@
                                         </div>
                                     </div>
                                     <div class="d-flex justify-content-end">
-                                        <button type="reset" class="btn btn-outline-secondary me-2" aria-label="Reset filters">
+                                        <button type="reset" class="btn btn-outline-secondary me-2"
+                                            aria-label="Reset filters">
                                             <i class="fas fa-undo me-1" aria-hidden="true"></i> Reset
                                         </button>
                                         <button type="submit" class="btn btn-primary" aria-label="Apply filters">
@@ -141,7 +153,8 @@
 
             <!-- Featured Deals -->
             <section aria-labelledby="featured-deals-heading" class="mb-5">
-                <h2 id="featured-deals-heading" class="mb-4"><i class="fas fa-star me-2" aria-hidden="true"></i>Featured Deals</h2>
+                <h2 id="featured-deals-heading" class="mb-4"><i class="fas fa-star me-2" aria-hidden="true"></i>Featured
+                    Deals</h2>
                 <div class="row" id="featured-deals">
                     <!-- Skeleton loading state -->
                     <div class="col-md-4 mb-4">
@@ -211,20 +224,24 @@
                         <div class="row align-items-center">
                             <div class="col-lg-6 mb-4 mb-lg-0">
                                 <h3 id="newsletter-heading" class="mb-3">Get the Best Deals Direct to Your Inbox</h3>
-                                <p class="mb-0">Subscribe to our newsletter and be the first to know about exclusive offers and last-minute deals.</p>
+                                <p class="mb-0">Subscribe to our newsletter and be the first to know about exclusive
+                                    offers and last-minute deals.</p>
                             </div>
                             <div class="col-lg-6">
                                 <form class="newsletter-form" id="newsletter-form">
                                     <div class="input-group">
                                         <label for="newsletter-email" class="visually-hidden">Email address</label>
-                                        <input type="email" class="form-control" id="newsletter-email" 
-                                               placeholder="Your email address" required
-                                               aria-describedby="newsletter-email-help">
-                                        <button class="btn btn-dark" type="submit" aria-label="Subscribe to newsletter">Subscribe</button>
+                                        <input type="email" class="form-control" id="newsletter-email"
+                                            placeholder="Your email address" required
+                                            aria-describedby="newsletter-email-help">
+                                        <button class="btn btn-dark" type="submit"
+                                            aria-label="Subscribe to newsletter">Subscribe</button>
                                     </div>
-                                    <div id="newsletter-email-help" class="form-text text-white mt-1">We'll never share your email</div>
+                                    <div id="newsletter-email-help" class="form-text text-white mt-1">We'll never share
+                                        your email</div>
                                     <div class="form-check mt-2">
-                                        <input class="form-check-input" type="checkbox" id="newsletter-consent" checked required>
+                                        <input class="form-check-input" type="checkbox" id="newsletter-consent" checked
+                                            required>
                                         <label class="form-check-label small" for="newsletter-consent">
                                             I agree to receive promotional emails
                                         </label>
@@ -264,10 +281,14 @@
                 <div class="col-md-3">
                     <h3 class="h5">Follow Us</h3>
                     <div class="social-links">
-                        <a href="#" class="text-white me-3" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
-                        <a href="#" class="text-white me-3" aria-label="Twitter"><i class="fab fa-twitter" aria-hidden="true"></i></a>
-                        <a href="#" class="text-white me-3" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
-                        <a href="#" class="text-white" aria-label="LinkedIn"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>
+                        <a href="#" class="text-white me-3" aria-label="Facebook"><i class="fab fa-facebook-f"
+                                aria-hidden="true"></i></a>
+                        <a href="#" class="text-white me-3" aria-label="Twitter"><i class="fab fa-twitter"
+                                aria-hidden="true"></i></a>
+                        <a href="#" class="text-white me-3" aria-label="Instagram"><i class="fab fa-instagram"
+                                aria-hidden="true"></i></a>
+                        <a href="#" class="text-white" aria-label="LinkedIn"><i class="fab fa-linkedin-in"
+                                aria-hidden="true"></i></a>
                     </div>
                 </div>
             </div>
@@ -281,31 +302,12 @@
 
     <!-- Load scripts with defer -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
-    
+
     <!-- Deals JS module -->
     <script src="assets/js/deals.js" type="module" defer></script>
-    
-    <!-- Inline script for current year -->
-    <script>
-        document.getElementById('current-year').textContent = new Date().getFullYear();
-        document.getElementById('last-updated').textContent = new Date().toLocaleDateString('en-US', {
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric'
-        });
-        
-        // Smooth page transitions
-        document.querySelectorAll('a').forEach(link => {
-            if (link.href && !link.hash && link.hostname === window.location.hostname) {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    document.body.classList.add('page-transition');
-                    setTimeout(() => {
-                        window.location.href = link.href;
-                    }, 300);
-                });
-            }
-        });
-    </script>
+
+    <!-- ubiquitous script -->
+    <script src="assets/js/main.js"></script>
 </body>
+
 </html>
