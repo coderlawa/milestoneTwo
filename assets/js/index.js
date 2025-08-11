@@ -64,7 +64,7 @@ const HolidayFinder = (() => {
         coords: { lat: 48.8566, lng: 2.3522 },
         tags: ["romantic", "cultural"],
         type: "city",
-        image: "https://source.unsplash.com/random/600x400/?paris",
+        image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
       },
       {
         id: "tokyo",
@@ -74,7 +74,7 @@ const HolidayFinder = (() => {
         coords: { lat: 35.6762, lng: 139.6503 },
         tags: ["modern", "cultural"],
         type: "city",
-        image: "https://source.unsplash.com/random/600x400/?tokyo",
+        image: "https://images.unsplash.com/photo-1492571350019-22de08371fd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
       },
       {
         id: "new-york",
@@ -83,7 +83,7 @@ const HolidayFinder = (() => {
         coords: { lat: 40.7128, lng: -74.006 },
         tags: ["urban", "shopping"],
         type: "city",
-        image: "https://source.unsplash.com/random/600x400/?newyork",
+        image: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
       },
     ],
   };
