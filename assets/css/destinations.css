@@ -28,6 +28,15 @@ body.page-transition {
     text-align: center;
 }
 
+.btn {
+    color: whitesmoke;
+    border-color: whitesmoke;
+}
+.btn:hover {
+    background-color: var(--primary);
+    border-color: var(--light);
+}
+
 /* Ranking badge styles */
 .ranking-badge {
     width: 32px;

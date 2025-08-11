@@ -26,7 +26,7 @@ const DestinationsModule = (() => {
 
       // Mock data for demonstration
       const mockData = {
-        top: generateMockDestinations(10, "top"),
+        top: generateMockDestinations(5, "top"),
         trending: generateMockDestinations(3, "trending"),
         seasonal: generateMockDestinations(4, "seasonal"),
       };
