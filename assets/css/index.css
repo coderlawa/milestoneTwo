@@ -96,8 +96,7 @@ body.page-transition {
 
 #travel-date-start,
 #travel-date-end {
-    width: 139px;
-    font-size: 0.9rem;
+    width: 140px;    
 }
 
 .destination-card {
@@ -176,6 +175,7 @@ body.page-transition {
     }
 
     .search-input {
+        width: 100%    !important;;
         border-radius: 30px !important;
         margin-bottom: 10px;
         border-right: 1px solid #ced4da !important;
