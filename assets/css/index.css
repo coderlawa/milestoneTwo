@@ -96,7 +96,7 @@ body.page-transition {
 
 #travel-date-start,
 #travel-date-end {
-    width: 140px;    
+    max-width: 143px;    
 }
 
 .destination-card {
@@ -157,7 +157,7 @@ body.page-transition {
 }
 
 /* Responsive Breakpoints */
-@media (max-width: 767.98px) {
+@media (min-width: 767.98px) {
     .hero {
         padding: 80px 0 40px;
     }
@@ -200,7 +200,7 @@ body.page-transition {
 
     #travel-date-start,
     #travel-date-end {
-        width: 100%;
+        width: auto;
         margin-right: 0;
         margin-bottom: 10px;
     }
